@@ -23,7 +23,7 @@
 \title{Fiche de système d'exploitation et langage C}
 \author{Alexandre Janniaux}
 
-\setlength{\columnseprule}{0.3pt} 
+%\setlength{\columnseprule}{0.3pt} 
 
 
 
@@ -168,9 +168,76 @@ P (barriere)
     V (y)
 \end{lstlisting}
 
-\section{Pipe}
+\subsubsection{Dangers à vérifier}
 
-Note: dans le cas d'une utilisation console, du type $\texttt{programA} > \texttt{destination}$, tout ce qui devait être écrit dans la sortie console ne s'affiche plus et est écrit dans destination. (partiel 2014, Q3, processus et fichier)
+\begin{itemize}
+    \item Famine (attente indéfinie)
+    \item Interblocage
+    \item Taille des sections critiques
+\end{itemize}
+
+\subsection{Solutions logicielles}
+
+\subsubsection{Algorithme de Dekker}
+
+L'idée est d'introduire un ordre pour distinguer les deux processus.
+\begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
+    etat[i] = 1
+    
+    while etat[j] = 1
+        if tour = j
+            etat[i] = 0
+            while tour = j {}
+            
+            etat[i] = 1;
+    tour = j
+    etat[i] = 0
+\end{lstlisting}
+
+\subsubsection{Algorithme de Peterson}
+
+On manipule une variable par processus pour l'accès.
+\begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
+    etat[i] = 1
+    tour = j
+
+    // Faire passer j s'il veut y aller
+    while (etat[j] = 1) 
+       && (tour == j) {} 
+
+    // section critique
+
+    etat[i] = 0
+\end{lstlisting}
+
+\subsection{Pipe}
+
+Modèle producteur-consommateur, deux utilisations en console:
+\begin{itemize}
+    \item \texttt{programme-A | programme-B}, envoie la sortie de \texttt{programme-A} vers \texttt{programme-B}
+    \item \texttt{programme > fichier}, écrit la sortie de programme vers le fichier \texttt{fichier}
+\end{itemize}
+
+Tout ce qui devait être écrit dans la sortie console ne s'affiche plus et est écrit vers la destination. \textbf{[partiel 2014, Q3, processus et fichier]}
+
+%TODO: utilisation de pipe P.184
+
+
+\section{Signaux}
+
+Pour ignorer des signaux, on utilise \texttt{signal} avec le numéro du signal et l'argument \texttt{SIG\_IGN}. Sinon, \texttt{signal (sig, \&fonction)} avec \texttt{fonction} une fonction de type \texttt{void fonction (int)};
+
+On utilise \texttt{kill} pour envoyer des signaux:
+\begin{itemize}
+    \item \texttt{SGIKILL} (9)
+    \item \texttt{SIGALRM} (14)
+    \item \texttt{SIGUSR1} (16)
+    \item \texttt{SIGUSR2} (17)
+\end{itemize}
+
+\section{Gestion des fichiers}
+
+
 
 
 \section{Mémo fonctions}
@@ -259,8 +326,9 @@ Saute à l'instruction \texttt{sigsetjmp} sauvegardé dans \texttt{env} en lui f
 
 %TODO
 \begin{lstlisting}
-    int fopen (char* filename, int)
+    int open (char* filename, int mode)
 \end{lstlisting}
+Ouvre le fichier \texttt{filename} avec le mode \texttt{mode}. \texttt{mode} peut valoir \texttt{O\_RDONLY}, \texttt{O\_WRONLY}, \texttt{O\_RDWR}, mais on peut utiliser des flags plus complexes comme \texttt{O\_CREAT}, \texttt{O\_EXCL}, \texttt{O\_APPEND}\ldots
 
 \begin{lstlisting}
     int read
@@ -271,12 +339,15 @@ Saute à l'instruction \texttt{sigsetjmp} sauvegardé dans \texttt{env} en lui f
 \end{lstlisting}
 
 \begin{lstlisting}
-    int lseek
+    int lseek (int fichier, int offset, int mode)
 \end{lstlisting}
+\texttt{mode} peut prendre les valeurs \texttt{SEEK\_CUR} (position actuelle), \texttt{SEEK\_SET} (début), 
 
 \begin{lstlisting}
-    int flock
+    int lockf (int fichier, int mode, int size)
 \end{lstlisting}
+\texttt{mode} peut valoir \texttt{F\_LOCK} ou \texttt{F\_ULOCK}.
+La synchronisation est assurée par le système, mais pas obligatoire.
 
 \begin{lstlisting}
     int pipe
