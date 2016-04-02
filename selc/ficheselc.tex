@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
 
+\usepackage{multicol}
 \usepackage{framed}
 
 \usepackage{xcolor}
@@ -21,6 +22,11 @@
 
 \title{Fiche de système d'exploitation et langage C}
 \author{Alexandre Janniaux}
+
+\setlength{\columnseprule}{0.3pt} 
+
+
+
 
 \begin{document}
 
@@ -44,6 +50,14 @@ attention cascade de fork
 
 \section{Ordonnancement}
 
+On ordonnance les processus selon une file (First Come First Served) ou une file de priorité avec comme critère la durée d'exécution (Shortest Job First) ou une priorité définie par l'utilisateur (avec vieillissement pour éviter la famine).
+PAPS par niveau de priorité: élu par priorité puis par ordre d'arrivée.
+
+Variantes tourniquet: Elles prévoient l'utilisation du temps en avance.
+(Round Robin) découpe en quantum de temps et les distribue de manière uniforme aux processus.
+(Round Robin within priority)
+
+{UNIX}: Tourniquet par priorité avec priorité dynamique (dépend du type d'interruption).
 
 
 \section{Sémaphore}
@@ -63,12 +77,95 @@ Opération (métaphore du panier):
 
 Attention situation d'interblocage et safety (variables partagées, etc)
 
-Modèles:
-Section critique
-Rendez-vous
-Lecteur-\'ecrivain
-Producteur-consommateur
-Barrière
+\subsubsection{Section critique}
+
+Sémaphore initialisé à $1$, jeton pris au début de la section critique et relâché à la fin. Un seul accès possible à la fois. 
+
+\subsubsection{Rendez-vous}
+
+\begin{multicols}{2}
+    \texttt{PROCESSUS 1}
+    \begin{lstlisting}[xleftmargin=-1cm]
+        P (x)
+        V (y)
+    \end{lstlisting}
+
+    \columnbreak{}
+    
+    \texttt{PROCESSUS 2}
+    \begin{lstlisting}[xleftmargin=-1cm]
+        V (x)
+        P (y)
+    \end{lstlisting}
+\end{multicols}
+
+\subsubsection{Producteur consommateur}
+
+\begin{multicols}{2}
+    \texttt{PRODUCTEUR}
+    \begin{lstlisting}[xleftmargin=-1cm]
+        P (x) 
+        push data
+        V (y)
+    \end{lstlisting}
+    \columnbreak{}
+    \texttt{CONSOMMATEUR}
+    \hspace{0cm}
+    \begin{lstlisting}[xleftmargin=-1cm]
+        V (x) 
+        P (y) 
+        read data
+    \end{lstlisting}
+\end{multicols}
+
+\subsubsection{Barrière}
+
+Exemple d'utilisation: les pipes.
+
+\begin{lstlisting}[xleftmargin=1cm,frame=shadowbox]
+P(x)
+if (nb < N-1)
+    nb++
+else for(i=1 to N-1) 
+    V(barriere)
+    nb--
+V(x)
+
+P(barriere)
+\end{lstlisting}
+
+\subsubsection{Lecteur-\'ecrivain}
+
+\texttt{LECTEUR}
+\begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
+    P(o)
+    V(o)
+
+    P(x)
+        if nb_lecteur = 0
+            P(y)
+        nb_lecteur++
+    V(x)
+
+    lecture
+
+    P(x)
+        if nb_lecteur = 1
+            V(y)
+        nb_lecteur--
+    V(x)
+\end{lstlisting}
+
+\texttt{ECRIVAIN}
+\begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
+    P(o)
+    P(y)
+
+    ecriture
+
+    V(o)
+    V(y)
+\end{lstlisting}
 
 \section{Pipe}
 
