@@ -123,48 +123,48 @@ Sémaphore initialisé à $1$, jeton pris au début de la section critique et re
 Exemple d'utilisation: les pipes.
 
 \begin{lstlisting}[xleftmargin=1cm,frame=shadowbox]
-P(x)
+P (x)
 if (nb < N-1)
     nb++
-else for(i=1 to N-1) 
-    V(barriere)
+else for (i=1 to N-1) 
+    V (barriere)
     nb--
-V(x)
+V (x)
 
-P(barriere)
+P (barriere)
 \end{lstlisting}
 
 \subsubsection{Lecteur-\'ecrivain}
 
 \texttt{LECTEUR}
 \begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
-    P(o)
-    V(o)
+    P (o)
+    V (o)
 
-    P(x)
+    P (x)
         if nb_lecteur = 0
-            P(y)
+            P (y)
         nb_lecteur++
-    V(x)
+    V (x)
 
     lecture
 
-    P(x)
+    P (x)
         if nb_lecteur = 1
-            V(y)
+            V (y)
         nb_lecteur--
-    V(x)
+    V (x)
 \end{lstlisting}
 
 \texttt{ECRIVAIN}
 \begin{lstlisting}[frame=shadowbox,xrightmargin=1cm]
-    P(o)
-    P(y)
+    P (o)
+    P (y)
 
     ecriture
 
-    V(o)
-    V(y)
+    V (o)
+    V (y)
 \end{lstlisting}
 
 \section{Pipe}
@@ -177,21 +177,21 @@ Note: dans le cas d'une utilisation console, du type $\texttt{programA} > \textt
 \subsection{Processus}
 
 \begin{lstlisting}
-    int fork ();
+    int fork ()
 \end{lstlisting}
 
 Cr\'ee un nouveau processus.
 Retourne son pid dans le processus p\`ere, $0$ dans le fils, ou $-1$ en cas d'erreur.
 
 \begin{lstlisting}
-    int wait (int pid);
+    int wait (int pid)
 \end{lstlisting}
 
 Attend la fin du processus de pid \texttt{pid}.
 Retourne 0 si pas d'erreur, ou le num\'ero d'erreur.
 
 \begin{lstlisting}
-    int execv (char* filename, char* argv[]);
+    int execv (char* filename, char* argv[])
 \end{lstlisting}
 
 Existe sous plusieurs formes.
@@ -201,21 +201,21 @@ Ne retourne qu'en cas d'erreur \emph{avant} le lancement.
 \subsection{Sémaphores}
 
 \begin{lstlisting}
-    sem_t*  sem_open (const char* name, int options);
+    sem_t*  sem_open (const char* name, int options)
 \end{lstlisting}
 Déclare une nouvelle sémaphore de nom \texttt{name} (au format ``/nom''). 
 \texttt{options} vaut \texttt{O\_CREAT} ou \texttt{O\_EXCL}, seul le 1er est utile ici.
 
 
 \begin{lstlisting}
-    int sem_wait (sem_t* sem);
+    int sem_wait (sem_t* sem)
 \end{lstlisting}
 \'Equivalent de l'opération \textbf{P}, prend un jeton ou bloque.
 Retourne $0$ si aucune erreur, $-1$ sinon.
 
 
 \begin{lstlisting}
-    int sem_post (sem_t* sem);
+    int sem_post (sem_t* sem)
 \end{lstlisting}
 \'Equivalent de l'opération \textbf{V}, rend un jeton et débloque un processus.
 Retourne $0$ si aucune erreur, $-1$ sinon.
@@ -223,26 +223,26 @@ Retourne $0$ si aucune erreur, $-1$ sinon.
 \subsection{Signaux}
 
 \begin{lstlisting}
-    int kill (int pid, int signal);
+    int kill (int pid, int signal)
 \end{lstlisting}
 Envoie le signal \texttt{signal} au processus \texttt{pid}
 Retourne $0$ si aucune erreur, $-1$ sinon.
 
 \begin{lstlisting}
-    func signal (int sig, func f);
+    func signal (int sig, func f)
 \end{lstlisting}
 Associe \emph{pour un appel} le signal \texttt{sig} à la fonction \texttt{f}.
 La valeur de retour n'a pas d'importance, et il faut bien donner \emph{l'adresse de la fonction}.
 (\texttt{\&mafonction}).
 
 \begin{lstlisting}
-    void alarm (int seconds);
+    void alarm (int seconds)
 \end{lstlisting}
 Supprime la dernière alarme, et si $\texttt{seconds} \neq 0$ rajoute une alarme qui lancera le signal \texttt{SIGALRM} dans \texttt{seconds} secondes.
 Retourne le nombre de secondes avant le déclenchement de l'alarme précédente.
 
 \begin{lstlisting}
-    int sigsetjmp (jmp_buf env, int sigmask);
+    int sigsetjmp (jmp_buf env, int sigmask)
 \end{lstlisting}
 Enregistre l'état du programme dans le contexte \texttt{env}. Généralement $\texttt{mask} = 0$, mais il faut réappeler \texttt{signal}.
 \texttt{env} doit être accessible, le déclarer en global (à l'extérieur des fonctions) pour l'utiliser avec des signaux.
@@ -250,7 +250,7 @@ Attention valeur retour: retourne $0$ ou $-1$ selon si pas d'erreur, sauf si l'o
 Dans le dernier cas, retourne l'entier passé en paramètre de \texttt{siglongjmp}, ce qui permet de savoir si on a sauté et d'où.
 
 \begin{lstlisting}
-    int siglongjmp (jmp_buf env, int val);
+    int siglongjmp (jmp_buf env, int val)
 \end{lstlisting}
 Saute à l'instruction \texttt{sigsetjmp} sauvegardé dans \texttt{env} en lui faisant retourner \texttt{val}.
 
@@ -258,7 +258,7 @@ Saute à l'instruction \texttt{sigsetjmp} sauvegardé dans \texttt{env} en lui f
 
 %TODO
 \begin{lstlisting}
-    int fopen (char* filename, int);
+    int fopen (char* filename, int)
 \end{lstlisting}
 
 \begin{lstlisting}
