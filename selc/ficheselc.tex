@@ -1,0 +1,191 @@
+\documentclass[9pt,twocolumn,a4paper]{article}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{xcolor}
+
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+
+\usepackage{listings}
+\lstset{
+    language=C, 
+    breaklines=true,
+    basicstyle={\ttfamily},
+    keywordstyle={\color{gray}},
+    morekeywords={func,sem_t,pid_t}
+}
+
+\title{Fiche de système d'exploitation et langage C}
+\author{Alexandre Janniaux}
+
+\begin{document}
+
+\maketitle
+
+intro : fonctionnement machine
+
+\section{Fork et processus}
+
+\subsubsection{fork}
+attention cascade de fork
+
+\section{Ordonnancement}
+
+
+
+\section{Sémaphore}
+
+\subsection{Principe}
+Objectif: contrôler l'exécution de deux acteurs indépendants.
+
+DEF SEMAPHORE
+
+Opération (métaphore du panier): 
+\begin{itemize} 
+    \item \textbf{P}: prendre un jeton
+    \item \textbf{V}: rendre un jeton
+\end{itemize}
+
+\textbf{P} bloque tant qu'il n'y a pas de jeton. 
+
+Attention situation d'interblocage et safety (variables partagées, etc)
+
+Modèles:
+Section critique
+Rendez-vous
+Lecteur-\'ecrivain
+Producteur-consommateur
+Barrière
+
+\section{Pipe}
+
+Note: dans le cas d'une utilisation console, du type \framed{\texttt{programA > destination}}, tout ce qui devait être écrit dans la sortie console ne s'affiche plus et est écrit dans destination. (partiel 2014, Q3, processus et fichier)
+
+
+\section{Mémo fonctions}
+
+\subsection{Processus}
+
+\begin{lstlisting}
+    int fork();
+\end{lstlisting}
+
+Cr\'ee un nouveau processus.
+Retourne son pid dans le processus p\`ere, $0$ dans le fils, ou $-1$ en cas d'erreur.
+
+\begin{lstlisting}
+    int wait(int pid);
+\end{lstlisting}
+
+Attend la fin du processus de pid \texttt{pid}.
+Retourne 0 si pas d'erreur, ou le num\'ero d'erreur.
+
+\begin{lstlisting}
+    int execv(char* filename, char* argv[]);
+\end{lstlisting}
+
+Existe sous plusieurs formes.
+Remplace le code à exécuter par le processus et la mémoire par celui du fichier, en remplissant le \texttt{argv} du \texttt{main} du programme cible.
+Ne retourne qu'en cas d'erreur \emph{avant} le lancement.
+
+\subsection{Sémaphores}
+
+\begin{lstlisting}
+    sem_t*  sem_open(const char* name, int options);
+\end{lstlisting}
+Déclare une nouvelle sémaphore de nom \texttt{name} (au format "/nom"). 
+\texttt{options} vaut \texttt{O\_CREAT} ou \texttt{O\_EXCL}, seul le 1er est utile ici.
+
+
+\begin{lstlisting}
+    int sem_wait(sem_t* sem);
+\end{lstlisting}
+\'Equivalent de l'opération \textbf{P}, prend un jeton ou bloque.
+Retourne $0$ si aucune erreur, $-1$ sinon.
+
+
+\begin{lstlisting}
+    int sem_post(sem_t* sem);
+\end{lstlisting}
+\'Equivalent de l'opération \textbf{V}, rend un jeton et débloque un processus.
+Retourne $0$ si aucune erreur, $-1$ sinon.
+
+\subsection{Signaux}
+
+\begin{lstlisting}
+    int kill(int pid, int signal);
+\end{lstlisting}
+Envoie le signal \texttt{signal} au processus \texttt{pid}
+Retourne $0$ si aucune erreur, $-1$ sinon.
+
+\begin{lstlisting}
+    func signal(int sig, func f);
+\end{lstlisting}
+Associe \emph{pour un appel} le signal \texttt{sig} à la fonction \texttt{f}.
+La valeur de retour n'a pas d'importance, et il faut bien donner \emph{l'adresse de la fonction}.
+(\texttt{\&mafonction}).
+
+\begin{lstlisting}
+    void alarm(int seconds);
+\end{lstlisting}
+Supprime la dernière alarme, et si $\texttt{seconds} \neq 0$ rajoute une alarme dans \textt{seconds} secondes qui lancera le signal \textt{SIGALRM}.
+Retourne le nombre de seconde avant le déclenchement de l'alarme précédente.
+
+\begin{lstlisting}
+    int sigsetjmp(jmp_buf env, int sigmask);
+\end{lstlisting}
+Enregistre l'état du programme dans le contexte \texttt{env}. Généralement $\texttt{mask} = 0$, mais il faut réappeler \texttt{signal}.
+\texttt{env} doit être accessible, le déclarer en global (à l'extérieur des fonctions) pour l'utiliser avec des signaux.
+Attention valeur retour: retourne $0$ ou $-1$ selon si erreur, sauf si l'on revient à cette instruction avec un saut.
+Dans le dernier cas, retourne l'entier passé en paramètre de \texttt{siglongjmp}, ce qui permet de savoir si on a sauté et d'où.
+
+\begin{lstlisting}
+    int siglongjmp(jmp_buf env, int val);
+\end{lstlisting}
+Saute à l'instruction \texttt{sigsetjmp} sauvegardé dans \texttt{env} en lui faisant retourner \texttt{val}.
+
+\subsection{Fichiers}
+
+\begin{lstlisting}
+    int fopen(char* filename, int 
+\end{lstlisting}
+
+\begin{lstlisting}
+    int read
+\end{lstlisting}
+
+\begin{lstlisting}
+    int write
+\end{lstlisting}
+
+\begin{lstlisting}
+    int lseek
+\end{lstlisting}
+
+\begin{lstlisting}
+    int flock
+\end{lstlisting}
+
+\begin{lstlisting}
+    int pipe
+\end{lstlisting}
+
+
+
+
+
+
+
+
+\section{Verrous}
+
+\section{Fonctions à connaitre}
+
+
+
+
+
+\end{document}
