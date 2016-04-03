@@ -101,6 +101,8 @@
 
     \subsubsection{Rendez-vous}
 
+    \texttt{x} et \texttt{y} initialisés à $0$.
+
     \begin{multicols}{2}
         \texttt{PROCESSUS 1}
         \begin{lstlisting}
@@ -119,27 +121,32 @@ P (y)
 
     \subsubsection{Producteur consommateur}
 
-    Exemple d'utilisation: les pipes.
-    {NdT}: pas la même chose que vu en cours, il existe une version plus efficace avec tableau.
+    Syncronisation entre une source et un client. Exemple d'utilisation: les pipes.
+    On trouve généralement une version améliorée de ce principe avec plusieurs cases, en initialisant le sémaphore du producteur à $N$ et du consommateur à $0$.
+    Note: c'est un rendez-vous avec une opération au milieu.
 
     \begin{multicols}{2}
         \texttt{PRODUCTEUR}
         \begin{lstlisting}
 P (x) 
-push data
+ecrire donnees
 V (y)
         \end{lstlisting}
         \columnbreak{}
         \texttt{CONSOMMATEUR}
         \hspace{0cm}
         \begin{lstlisting}
-V (x) 
 P (y) 
 read data
+V (x) 
         \end{lstlisting}
     \end{multicols}
 
+
+
     \subsubsection{Barrière}
+
+    \texttt{x} initialisé à $1$, \texttt{barriere} à $0$.
 
     \begin{lstlisting}[frame=shadowbox]
 P (x)
@@ -154,6 +161,8 @@ P (barriere)
     \end{lstlisting}
 
     \subsubsection{Lecteur-\'ecrivain}
+
+    \texttt{o,x,y} initialisé à $1$.
 
     \texttt{LECTEUR}
     \begin{lstlisting}[frame=shadowbox]
