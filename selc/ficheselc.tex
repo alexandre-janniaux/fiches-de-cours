@@ -1,9 +1,11 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[a4paper]{article}
 
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[french]{babel}
+
+\usepackage[left=2cm,right=2cm,top=1cm,bottom=1cm]{geometry}
 
 \usepackage{multicol}
 \usepackage{framed}
@@ -25,6 +27,7 @@
 
 %\setlength{\columnseprule}{0.3pt} 
 \setlength{\columnsep}{1cm}
+\setlength{\textwidth}{17cm}
 
 
 
@@ -87,7 +90,7 @@
 
     \begin{multicols}{2}
         \texttt{PROCESSUS 1}
-        \begin{lstlisting}[xleftmargin=-1cm]
+        \begin{lstlisting}
 P (x)
 V (y)
         \end{lstlisting}
@@ -95,7 +98,7 @@ V (y)
         \columnbreak{}
         
         \texttt{PROCESSUS 2}
-        \begin{lstlisting}[xleftmargin=-1cm]
+        \begin{lstlisting}
 V (x)
 P (y)
         \end{lstlisting}
@@ -159,8 +162,10 @@ P (x)
 V (x)
     \end{lstlisting}
 
+    \pagebreak
+
     \texttt{ECRIVAIN}
-    \begin{lstlisting}[frame=shadowbow]
+    \begin{lstlisting}[frame=shadowbox]
 P (o)
 P (y)
 
@@ -261,6 +266,22 @@ etat[i] = 0
     En mettant c en dessous de $c3$, on corrige le problème, et la structure n'en fait plus que $16$ octets.
 
     \subsection{Partitions}
+    
+    \subsubsection{Politiques}
+
+    On combine généralement ces politiques avec un ramasse-miette qui défragmente les partitions.
+
+    \begin{itemize}
+        \item \emph{First fit}: on utilise la première partition libre de taille suffisante.
+        \item \emph{Best fit}: on utilise la partition de taille la plus proche.
+        \item \emph{Worst fit}: on utilise la partition de taille la plus grande.
+    \end{itemize}
+
+    \textbf{Knuth:} Il y a toujours un tiers de blocs libres par rapport aux blocs occupés avec ces politiques.
+
+    \subsubsection{Mémoire virtuelle et pagination}
+
+    
 
 
     \section{Mémo fonctions}
