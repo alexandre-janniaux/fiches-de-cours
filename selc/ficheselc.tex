@@ -265,9 +265,9 @@ etat[i] = 0
     Ici, le système rajoute $7$ octets de rembourrage entre c et d, et un octet après $c3$, ce qui fait une structure de 24 octets.
     En mettant c en dessous de $c3$, on corrige le problème, et la structure n'en fait plus que $16$ octets.
 
-    \subsection{Partitions}
+    \section{Partitions et mémoire}
     
-    \subsubsection{Politiques}
+    \subsection{Politiques}
 
     On combine généralement ces politiques avec un ramasse-miette qui défragmente les partitions.
 
@@ -279,10 +279,23 @@ etat[i] = 0
 
     \textbf{Knuth:} Il y a toujours un tiers de blocs libres par rapport aux blocs occupés avec ces politiques.
 
-    \subsubsection{Mémoire virtuelle et pagination}
+    \subsection{Mémoire virtuelle et pagination}
 
-    
+    Les adresses sont constitués de deux parties: l'\emph{adresse physique} de la page et le \emph{déplacement} dans cette page (qui doit aller jusqu'à la taille de la page).
+    Pour les processus, il y a également une numérotation des \emph{pages logiques}, que le système associe ensuite à des pages physiques. Cela permet d'isoler les processus entre eux et abstraire la mémoire en virtualisant l'espace d'adressage.
 
+    Méthode d'accès: on transforme l'adresse de logique à physique, puis on récupère la donnée dans la page physique.
+
+    \subsection{Allocation des pages}
+
+    Pour les exercies sur les allocations, on fait un tableau page virtuelle à gauche, temps discret en haut, et page physique dans les cases.
+
+    \subsubsection{Stratégies}
+    \begin{itemize}
+        \item \emph{Least recently used}: on place les plus anciennement utilisées sur la mémoire lente.
+        \item \emph{Least frequently used}: on place les moins utilisées sur la mémoire lente.
+        \item \emph{First in first out}: on place les dernières créées sur la mémoire lente.
+    \end{itemize}
 
     \section{Mémo fonctions}
 
@@ -402,21 +415,12 @@ int lockf (int fichier, int mode, int size)
     \texttt{mode} peut valoir \texttt{F\_LOCK} ou \texttt{F\_ULOCK}.
     La synchronisation est assurée par le système, mais pas obligatoire.
 
-    \begin{lstlisting}
-int pipe
-    \end{lstlisting}
+\begin{lstlisting}
+int pipe (int pipefd[2])
+\end{lstlisting}
 
-
-
-
-
-
-
-
-    \section{Verrous}
-
-    \section{Fonctions à connaitre}
-
+Crée un pipe et remplie le tableau avec deux descripteurs de fichiers. \texttt{pipefd[0]} est réservé à la lecture, et \texttt{pipefd[1]} à l'écriture.
+Retourne $0$ ou $-1$ si une erreur apparait.
 
 
 \end{multicols*}
