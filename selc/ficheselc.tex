@@ -34,10 +34,11 @@
 \begin{document}
 
 \maketitle
+\pagebreak
 
 \begin{multicols*}{2}
 
-    intro: fonctionnement machine
+    Les machines actuelles stockent les instructions du programme et ses données dans le même espace (Von Neumann).
 
     \section{Fork et processus}
 
@@ -50,19 +51,31 @@
 
     Lors d'un appel à \texttt{fork}, \texttt{stack}, \texttt{data} et le pointeur sur \texttt{text} sont copiés pour le nouveau processus.
 
-    \subsubsection{fork}
-    attention cascade de fork
+    Attention à la cascade de \texttt{fork} si on ne fait pas attention au processus dans lequel on l'appelle.
 
     \section{Ordonnancement}
 
-    On ordonnance les processus selon une file (First Come First Served) ou une file de priorité avec comme critère la durée d'exécution (Shortest Job First) ou une priorité définie par l'utilisateur (avec vieillissement pour éviter la famine).
-    PAPS par niveau de priorité: élu par priorité puis par ordre d'arrivée.
+    \subsection{Politiques avec file}
+    Dans ces politiques, on applique l'algorithme pour l'attribution d'un seul quantum et on le remet dans la file.
+    \begin{itemize}
+        \item \emph{First Come First Served}: file classique
+        \item \emph{Shortest Job First}: file de priorité sur la durée d'exécution 
+        \item \emph{} Priorité définie par l'utilisateur (avec vieillissement pour éviter la famine).
+        \item \emph{PAPS}: file de priorité élu par priorité puis par ordre d'arrivée.
+    \end{itemize}
 
-    Variantes tourniquet: Elles prévoient l'utilisation du temps en avance.
-    (Round Robin) découpe en quantum de temps et les distribue de manière uniforme aux processus.
-    (Round Robin within priority)
+    \subsection{Politiques de type tourniquet}
 
-    {UNIX}: Tourniquet par priorité avec priorité dynamique (dépend du type d'interruption).
+    Dans ces politiques, on reprend les précédentes, mais en planifiant à l'avance les quantums pour que tous les processus aient un quantum prévu (attente bornée).
+    Elles permettent d'éviter la famine.
+    \begin{itemize}
+        \item \emph{Round Robin}: découpe en quantum de temps et les distribue de manière uniforme aux processus.
+        \item \emph{Round Robin within priority}: découpe en quantum de temps distribués en fonction des priorités.
+    \end{itemize}
+
+    \subsection{Implémentations}
+
+    Pour {UNIX}: \emph{Round robin with priority} avec priorité dynamique (dépend du type d'interruption).
 
 
     \section{Sémaphore}
@@ -70,7 +83,7 @@
     \subsection{Principe}
     Objectif: contrôler l'exécution de deux acteurs indépendants.
 
-    DEF SEMAPHORE
+    C'est un objet muni d'un \emph{compteur} qui indique le nombre de jetons disponible ou en attente et d'une \emph{file d'attente} de processus. 
 
     Opération (métaphore du panier): 
     \begin{itemize} 
@@ -162,7 +175,6 @@ P (x)
 V (x)
     \end{lstlisting}
 
-    \pagebreak
 
     \texttt{ECRIVAIN}
     \begin{lstlisting}[frame=shadowbox]
