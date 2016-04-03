@@ -247,7 +247,20 @@ etat[i] = 0
     \subsection{Alignement mémoire}
 
     Les éléments des structures en mémoire sont alignées sur des multiples de $2$, $4$, $8$, \ldots
+    
+    \begin{lstlisting}[frame=shadowbox]
+        struct noalign {
+            char c;     // 1
+            double d;   // 8
+            int i;      // 4
+            char c3[3]; // 3
+        }
+    \end{lstlisting}
 
+    Ici, le système rajoute $7$ octets de rembourrage entre c et d, et un octet après $c3$, ce qui fait une structure de 24 octets.
+    En mettant c en dessous de $c3$, on corrige le problème, et la structure n'en fait plus que $16$ octets.
+
+    \subsection{Partitions}
 
 
     \section{Mémo fonctions}
